@@ -1,7 +1,9 @@
 import cv2
 import mediapipe as mp
-
 mp_hands = mp.solutions.hands
+
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 class Hand:
     # Video resolution
@@ -27,7 +29,7 @@ class Hand:
                                     min_tracking_confidence=0.5)
 
     def test(self):
-        print(self.wCam)
+        print(self.wCam, end="x")
         print(self.hCam)
         print(self.cap.isOpened())
 
@@ -35,12 +37,25 @@ class Hand:
             success, img = self.cap.read()
             img.flags.writeable = False
             if not success:
-                print("Capturing video error")
+                print("Empty camera frame")
                 break
-            img = cv2.flip(img, 1)
+            image = cv2.flip(img, 1)
             cv2.imshow("image", img)
+            
+            results = mp_hands.Hands().process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
+            image.flags.writeable = True
+            image = image
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    mp_drawing.draw_landmarks(
+                        image,
+                        hand_landmarks,
+                        mp_hands.HAND_CONNECTIONS,
+                        mp_drawing_styles.get_default_hand_landmarks_style(),
+                        mp_drawing_styles.get_default_hand_connections_style())
 
+            cv2.imshow("image", image)
 
             if cv2.waitKey(5) & 0xFF == 27:
                 break
