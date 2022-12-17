@@ -1,4 +1,4 @@
-import pygame , sys , random , pygame_menu , Tracker
+import pygame , sys , random , Tracker
 from pygame.math import Vector2
 
 detector = Tracker.Hand()
@@ -71,8 +71,8 @@ class FRUIT:
         screen.blit(apple,fruit_rect)
         
     def randomize(self):
-        self.x = random.randint(0 , cell_number - 1)
-        self.y = random.randint(0 , cell_number - 1)
+        self.x = random.randint(1 , cell_number - 2)
+        self.y = random.randint(1 , cell_number - 2)
         self.pos = Vector2( self.x, self.y)
         
 pygame.init()
@@ -83,7 +83,7 @@ clock = pygame.time.Clock()
 main_game = GAME()
 SCREEN_UPDATE = pygame.USEREVENT
 apple = pygame.image.load('Graphics/apple.png').convert_alpha()
-pygame.time.set_timer(SCREEN_UPDATE,150)
+pygame.time.set_timer(SCREEN_UPDATE,200)
 playing = True
 while True:
     for event in pygame.event.get():
@@ -93,34 +93,21 @@ while True:
         if event.type == SCREEN_UPDATE:
             main_game.update()
         if playing == True:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    if main_game.snake.direction.y != 1:
-                        main_game.snake.direction = Vector2(0,-1)
-                if event.key == pygame.K_RIGHT:
-                    if main_game.snake.direction.x != -1:
-                        main_game.snake.direction = Vector2(1,0)
-                if event.key == pygame.K_DOWN:
-                    if main_game.snake.direction.y != 1:
-                        main_game.snake.direction = Vector2(0,1)
-                if event.key == pygame.K_LEFT:
-                    if main_game.snake.direction.x != -1:
-                        main_game.snake.direction = Vector2(-1,0)
             move = detector.get_move()
             if move == detector.UP:
                 if main_game.snake.direction.y != 1:
                         main_game.snake.direction = Vector2(0,-1)
-                if move == detector.RIGHT:
-                    if main_game.snake.direction.x != -1:
-                        main_game.snake.direction = Vector2(1,0)
-                if move == detector.DOWN:
-                    if main_game.snake.direction.y != 1:
-                        main_game.snake.direction = Vector2(0,1)
-                if move == detector.LEFT:
-                    if main_game.snake.direction.x != -1:
-                        main_game.snake.direction = Vector2(-1,0)
+            if move == detector.RIGHT:
+                if main_game.snake.direction.x != -1:
+                    main_game.snake.direction = Vector2(1,0)
+            if move == detector.DOWN:
+                if main_game.snake.direction.y != 1:
+                     main_game.snake.direction = Vector2(0,1)
+            if move == detector.LEFT:
+                if main_game.snake.direction.x != -1:
+                    main_game.snake.direction = Vector2(-1,0)
     screen.fill(pygame.Color('black'))
     main_game.draw_elements()
     pygame.display.update()
-    clock.tick(20)
+    clock.tick(10)
     
