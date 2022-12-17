@@ -9,12 +9,12 @@ class Hand:
     # Video resolution
     wCam = None
     hCam = None
-    # Declaration of capture device
+    # Capture device
     cap = None
     # Hand tracker
     hand = None
 
-    def __init__(self, device = 0, wCam = 640, hCam = 480):
+    def __init__(self, device=0, wCam=640, hCam=480):
         self.wCam = wCam
         self.hCam = hCam
         # Set capture device
@@ -35,27 +35,45 @@ class Hand:
 
         while self.cap.isOpened():
             success, img = self.cap.read()
-            img.flags.writeable = False
             if not success:
                 print("Empty camera frame")
                 break
-            image = cv2.flip(img, 1)
-            cv2.imshow("image", img)
-            
-            results = mp_hands.Hands().process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-            image.flags.writeable = True
-            image = image
+            img.flags.writeable = False
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = cv2.flip(img, 1)
+            results = self.hand.process(img)
+
+            img.flags.writeable = True
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
             if results.multi_hand_landmarks:
                 for hand_landmarks in results.multi_hand_landmarks:
                     mp_drawing.draw_landmarks(
-                        image,
+                        img,
                         hand_landmarks,
                         mp_hands.HAND_CONNECTIONS,
                         mp_drawing_styles.get_default_hand_landmarks_style(),
                         mp_drawing_styles.get_default_hand_connections_style())
 
-            cv2.imshow("image", image)
+            print("start")
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    lm_array = list(enumerate(hand_landmarks.landmark))
+
+                    #print(lm_array[0])
+                    id, lm = lm_array[9]
+                    print("X: ", end="")
+                    print(lm.x)
+                    print("Y: ", end="")
+                    print(lm.y)
+                    continue
+                    for id, lm in enumerate(hand_landmarks.landmark):
+                        cx = int(lm.x * self.wCam)
+                        cy = int(lm.y * self.hCam)
+                        print(id, cx, cy)
+
+            print("stop")
+            cv2.imshow("image", img)
 
             if cv2.waitKey(5) & 0xFF == 27:
                 break
