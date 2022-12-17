@@ -21,10 +21,8 @@ class Hand:
     hand = None
     # Image
     img = None
-    # Last successfully processed frame
+    # Last move
     move = int
-    old_x = float
-    old_y = float
 
 
     def __init__(self, device=0, wCam=640, hCam=480):
@@ -80,29 +78,26 @@ class Hand:
             return self.move
         # Choose the next move based on the last position
         
-        diff_x = pos[0] - self.old_x
-        diff_y = pos[1] - self.old_y
+        x = pos[0]
+        y = pos[1]
 
-        self.old_x = pos[0]
-        self.old_y = pos[1]
-
-        diff = 0.07
-
-        if abs(diff_x) > abs(diff_y):
-            if abs(diff_x) - diff > 0:
-                if diff_x > 0:
-                    self.move = self.RIGHT
-                    return self.RIGHT
-                else:
-                    self.move = self.LEFT
-                    return self.LEFT
+        # Over main diagonal
+        if x >= y:
+            # Over minor diagonal -> Up
+            if x + y <= 1:
+                self.move = self.UP
+                return self.UP
+            # Under minor diagonal -> Right
+            else:
+                self.move = self.RIGHT
+                return self.RIGHT
+        # Under main diagonal
         else:
-            if abs(diff_y) - diff > 0:
-                if diff_y < 0:
-                    self.move = self.UP
-                    return self.UP
-                else:
-                    self.move = self.DOWN
-                    return self.DOWN
-
-        return self.move
+            # Over minor diagonal -> Left
+            if x + y <= 1:
+                self.move = self.LEFT
+                return self.LEFT
+            # Under minor diagonal -> Down
+            else:
+                self.move = self.DOWN
+                return self.DOWN
