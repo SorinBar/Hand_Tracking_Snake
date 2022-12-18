@@ -1,5 +1,6 @@
 import pygame , sys , random , Tracker
 from pygame.math import Vector2
+import time
 
 detector = Tracker.Hand()
 
@@ -109,5 +110,5 @@ while True:
     screen.fill(pygame.Color('black'))
     main_game.draw_elements()
     pygame.display.update()
-    clock.tick(10)
+    clock.tick(60)
     

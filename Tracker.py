@@ -55,6 +55,8 @@ class Hand:
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 results = self.hand.process(img)
 
+                cv2.imshow("DEBUG", cv2.flip(img, 1))
+                
                 if results.multi_hand_landmarks:
                     # Detected hand
                     hand_landmarks = results.multi_hand_landmarks[0]
