@@ -22,16 +22,15 @@ class GAME:
     
     def check_collision(self):
         if not 0 <= self.snake.body[0].x  < cell_number:
-            self.game_over()
+            run = False
         if not 0 <= self.snake.body[0].y  < cell_number:
-            self.game_over()
+            run = False
         for i in self.snake.body[1:]:
             if i == self.snake.body[0]:
-                self.game_over()
+                run = False
             
     def game_over(self):
-        pygame.quit()
-        sys.exit()
+        print
         
 class SNAKE: 
     def __init__(self):
@@ -106,29 +105,30 @@ pygame.init()
 cell_size = 20
 cell_number = 40
 screen = pygame.display.set_mode((cell_size*cell_number,cell_number*cell_size))
-clock = pygame.time.Clock()
-
+clock = pygame.time.Clock()      
 apple = pygame.image.load('Graphics/apple.png').convert_alpha()
-
 main_game = GAME()
 SCREEN_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(SCREEN_UPDATE,150)
+pygame.time.set_timer(SCREEN_UPDATE,100)
+run = True
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == SCREEN_UPDATE:
-            main_game.update()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                main_game.snake.direction = Vector2(0,-1)
-            if event.key == pygame.K_RIGHT:
-                main_game.snake.direction = Vector2(1,0)
-            if event.key == pygame.K_DOWN:
-                main_game.snake.direction = Vector2(0,1)
-            if event.key == pygame.K_LEFT:
-                main_game.snake.direction = Vector2(-1,0)
+        
+        if run == True:
+            if event.type == SCREEN_UPDATE:
+                main_game.update()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    main_game.snake.direction = Vector2(0,-1)
+                if event.key == pygame.K_RIGHT:
+                    main_game.snake.direction = Vector2(1,0)
+                if event.key == pygame.K_DOWN:
+                    main_game.snake.direction = Vector2(0,1)
+                if event.key == pygame.K_LEFT:
+                    main_game.snake.direction = Vector2(-1,0)
     screen.fill(pygame.Color('black'))
     main_game.draw_elements()
     pygame.display.update()

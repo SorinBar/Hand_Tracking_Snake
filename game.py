@@ -31,5 +31,5 @@ class GAME:
                 self.game_over()
             
     def game_over(self):
-        pygame.quit()
-        sys.exit()
+        run = False
+        
