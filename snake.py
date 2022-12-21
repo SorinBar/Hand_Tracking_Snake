@@ -77,8 +77,8 @@ class FRUIT:
 
         
 pygame.init()
-cell_size = 30
-cell_number =35
+cell_size = 20
+cell_number =40
 screen = pygame.display.set_mode((cell_size*cell_number,cell_number*cell_size))
 pygame.display.set_caption("Snake game")
 game_paused = True
